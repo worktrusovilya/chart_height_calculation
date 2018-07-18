@@ -83,14 +83,14 @@ def chart_height_calculation(first_height, data):
     for enum, item in enumerate(height_result):
         height_dict[enum] = item
 
+    # максимальная высота в списке координат
+    height_max = max(height_result)
+    result_first_height = height_max
+
+    # ключ максимальной высоты в списке координат
+    key_height = get_key(height_dict, height_max)
+
     if first_height == 0:
-        # максимальная высота в списке координат
-        height_max = max(height_result)
-        result_first_height = height_max
-
-        # ключ максимальной высоты в списке координат
-        key_height = get_key(height_dict, height_max)
-
         result_second_height_right = get_right(height_result, key_height)
         result_second_height_left = get_left(height_result, key_height)
 
@@ -100,7 +100,13 @@ def chart_height_calculation(first_height, data):
             result_second_height = result_second_height_right
     elif first_height > 0:
         result_first_height = first_height
+        result_second_height_right = get_right(height_result, key_height)
+        result_second_height_left = get_left(height_result, key_height)
 
+        if result_second_height_left > result_second_height_right:
+            result_second_height = result_second_height_left
+        else:
+            result_second_height = result_second_height_right
     else:
         print 'The height of the first antenna can not be negative.'
 
