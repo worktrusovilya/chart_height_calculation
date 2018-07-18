@@ -1,3 +1,3 @@
-# trade-core
+# aviat
 
 pip install -r requirements.txt
