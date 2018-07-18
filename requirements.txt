@@ -1,5 +1,1 @@
-flask
-redis
-celery
-flower
-requests
+matplotlib
