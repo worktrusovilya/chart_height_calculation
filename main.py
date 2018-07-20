@@ -3,56 +3,39 @@ import json
 import matplotlib.pyplot as plt
 
 
-def get_right(height_result, key_height):
-    # срез справа от максимальной высоты
-    height_result_right = height_result[0:key_height]
+# получения максимума слева или справа
+def get_max_section(section, xy, id_height_max):
+    max = {}
+    height_max_section = 0.0
 
-    result_second_height = 0
+    # срез от максимальной высоты
+    if section == 'right':
+        xy_section = xy[id_height_max + 1:]
+    elif section == 'left':
+        xy_section = xy[:id_height_max - 1]
+    else:
+        xy_section = xy
 
-    # перебираем врпаво
-    for enum, item in enumerate(height_result_right):
-        if item > height_result_right[enum]:
-            result_second_height = item
-        else:
-            result_second_height = height_result_right[enum]
+    # максимальная высота в списке координат
+    for item in xy_section:
+        if height_max_section < item['x']:
+            height_max_section = item['x']
+            max = item
 
-    return result_second_height
-
-
-def get_left(height_result, key_height):
-    # срез влево от максимальной высоты
-    height_result_left = height_result[key_height:]
-
-    result_second_height = 0
-
-    # перебираем влево
-    for enum, item in enumerate(height_result_left):
-        if item > height_result_left[enum]:
-            result_second_height = item
-        else:
-            result_second_height = height_result_left[enum]
-
-    return result_second_height
+    return max
 
 
 # отображение графика координат для теста
 def show_gr(x, y):
     plt.xlabel("X")
     plt.ylabel("Y")
+
     # представляем точки (х,у) кружочками диаметра 10
     plt.plot(x, y, 'r')
 
     # Сетка на фоне для улучшения восприятия
     plt.grid(True, linestyle='-', color='0.75')
-
     plt.show()
-
-
-# получение ключа по value элемента в списке
-def get_key(d, value):
-    for k, v in d.items():
-        if v == value:
-            return k
 
 
 def calculate_height(heightsArray, struct):
@@ -67,46 +50,44 @@ def chart_height_calculation(first_height, data):
 
     # координаты высот
     heightsArray = data['heightsArray']
-    distanceArray = data['distanceArray']
+    y = data['distanceArray']
     # координаты с учетом помех
     struct = data['struct']
 
     # считаем общие координаты
-    height_result = calculate_height(heightsArray, struct)
+    x = calculate_height(heightsArray, struct)
 
-    # график отображения координат для теста
-    show_gr(distanceArray, height_result)
+    show_gr(y, x)
 
-    # формируем dict с ключем id высоты в начальных данных
-    height_dict = {}
+    # список dict координат
+    xy = []
+    for enum, x_item in enumerate(x):
+        xy.append({'id': enum, 'x': x_item})
 
-    for enum, item in enumerate(height_result):
-        height_dict[enum] = item
+    for enum, item in enumerate(xy):
+        xy[enum].update({'y': y[enum]})
 
-    # максимальная высота в списке координат
-    height_max = max(height_result)
-    result_first_height = height_max
+    # максимальная высота
+    height_max = 0.0
+    max_center = {}
 
-    # ключ максимальной высоты в списке координат
-    key_height = get_key(height_dict, height_max)
+    # находим максимальную высоту
+    for item in xy:
+        if height_max < item['x']:
+            height_max = item['x']
+            max_center = item
 
     if first_height == 0:
-        result_second_height_right = get_right(height_result, key_height)
-        result_second_height_left = get_left(height_result, key_height)
+        # максимальная высота справа от максимума
+        max_right = get_max_section('right', xy, max_center['id'])
+        # максимальная высота слева от максимума
+        max_left = get_max_section('left', xy, max_center['id'])
 
-        if result_second_height_left > result_second_height_right:
-            result_second_height = result_second_height_left
-        else:
-            result_second_height = result_second_height_right
+        print(max_center)
+        print(max_left)
+        print(max_right)
     elif first_height > 0:
-        result_first_height = first_height
-        result_second_height_right = get_right(height_result, key_height)
-        result_second_height_left = get_left(height_result, key_height)
-
-        if result_second_height_left > result_second_height_right:
-            result_second_height = result_second_height_left
-        else:
-            result_second_height = result_second_height_right
+        pass
     else:
         print 'The height of the first antenna can not be negative.'
 
