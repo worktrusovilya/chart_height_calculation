@@ -61,11 +61,11 @@ def chart_height_calculation(first_height, data):
 
     # список dict координат
     xy = []
-    for enum, x_item in enumerate(y):
-        xy.append({'id': enum, 'y': x_item})
+    for enum, y_item in enumerate(y):
+        xy.append({'id': enum, 'y': y_item})
 
     for enum, item in enumerate(xy):
-        xy[enum].update({'x': y[enum]})
+        xy[enum].update({'x': x[enum]})
 
     # максимальная высота
     height_max = 0.0
@@ -83,8 +83,9 @@ def chart_height_calculation(first_height, data):
         # максимальная высота слева от максимума
         max_left = get_max_section('left', xy, max_center['id'])
 
-        print(max_center)
+
         print(max_left)
+        print(max_center)
         print(max_right)
     elif first_height > 0:
         pass
