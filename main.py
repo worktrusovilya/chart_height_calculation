@@ -18,8 +18,8 @@ def get_max_section(section, xy, id_height_max):
 
     # максимальная высота в списке координат
     for item in xy_section:
-        if height_max_section < item['x']:
-            height_max_section = item['x']
+        if height_max_section < item['y']:
+            height_max_section = item['y']
             max = item
 
     return max
@@ -50,22 +50,22 @@ def chart_height_calculation(first_height, data):
 
     # координаты высот
     heightsArray = data['heightsArray']
-    y = data['distanceArray']
+    x = data['distanceArray']
     # координаты с учетом помех
     struct = data['struct']
 
     # считаем общие координаты
-    x = calculate_height(heightsArray, struct)
+    y = calculate_height(heightsArray, struct)
 
-    show_gr(y, x)
+    show_gr(x, y)
 
     # список dict координат
     xy = []
-    for enum, x_item in enumerate(x):
-        xy.append({'id': enum, 'x': x_item})
+    for enum, x_item in enumerate(y):
+        xy.append({'id': enum, 'y': x_item})
 
     for enum, item in enumerate(xy):
-        xy[enum].update({'y': y[enum]})
+        xy[enum].update({'x': y[enum]})
 
     # максимальная высота
     height_max = 0.0
@@ -73,8 +73,8 @@ def chart_height_calculation(first_height, data):
 
     # находим максимальную высоту
     for item in xy:
-        if height_max < item['x']:
-            height_max = item['x']
+        if height_max < item['y']:
+            height_max = item['y']
             max_center = item
 
     if first_height == 0:
